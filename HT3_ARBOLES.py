@@ -1,5 +1,5 @@
 # %% [markdown]
-# HOJA DE TRABAJO 3 ARBOLES DE DECISION
+# # HOJA DE TRABAJO 3 ARBOLES DE DECISION
 
 # Raul Jimenez 19017
 
@@ -8,6 +8,7 @@
 # Oscar Saravia 19322
 
 # %%
+from re import U
 from statsmodels.graphics.gofplots import qqplot
 import numpy as np
 import pandas as pd
@@ -218,4 +219,78 @@ plt.rcParams['figure.figsize'] = (10, 10)
 plt.ylabel('Frecuencia de la variable Neighborhood')
 plt.xlabel('Años')
 plt.title('Grafico de barras para la variable Neighborhood')
+plt.show()
+
+# %% [markdown]
+# ## 3. Incluya un análisis de grupos en el análisis exploratorio. Explique las características de los grupos.
+# Se puede concluir que los datos normalizados son viables para el uso de clusters o grupos. Se logra llegar a esta conclucion debido a que nuestro test de hopkins sale de 0.08 junto con la grafica VAT. Con la grafica del codo se puede determinar que se pueden utilizar dos clusters debido a que es en ese dato donde se encuentra mas marcado el codo. Pero tambien se podria usar 7 debido a que tambien se encuenatra marcada ahi una punta.
+
+# %%
+data.hist()
+plt.show()
+
+# %%
+# NORMALIZAMOS DATOS
+usefullAttr.remove('Neighborhood')
+data = train[usefullAttr]
+X = []
+for column in data.columns:
+    try:
+        column
+        if column != 'Neighborhood':
+            data[column] = (data[column]-data[column].mean()) / \
+                data[column].std()
+            X.append(data[column])
+    except:
+        continue
+data_clean = data.dropna(subset=usefullAttr, inplace=True)
+X_Scale = np.array(data)
+X_Scale
+
+# %%
+# HOPKINGS
+X_scale = sklearn.preprocessing.scale(X_Scale)
+# X = X_scale
+pyclustertend.hopkins(X_scale, len(X_scale))
+
+# %%
+# VAT
+pyclustertend.vat(X_Scale)
+
+# %%
+numeroClusters = range(1, 11)
+wcss = []
+for i in numeroClusters:
+    kmeans = cluster.KMeans(n_clusters=i)
+    kmeans.fit(X_Scale)
+    wcss.append(kmeans.inertia_)
+
+plt.plot(numeroClusters, wcss)
+plt.xlabel("Número de clusters")
+plt.ylabel("Score")
+plt.title("Gráfico de Codo")
+plt.show()
+
+# %%
+kmeans = cluster.KMeans(n_clusters=2)
+kmeans.fit(X_Scale)
+kmeans_result = kmeans.predict(X_Scale)
+kmeans_clusters = np.unique(kmeans_result)
+for kmeans_cluster in kmeans_clusters:
+    # get data points that fall in this cluster
+    index = np.where(kmeans_result == kmeans_cluster)
+    # make the plot
+    plt.scatter(X_Scale[index, 0], X_Scale[index, 1])
+plt.show()
+
+# %%
+kmeans = cluster.KMeans(n_clusters=7)
+kmeans.fit(X_Scale)
+kmeans_result = kmeans.predict(X_Scale)
+kmeans_clusters = np.unique(kmeans_result)
+for kmeans_cluster in kmeans_clusters:
+    # get data points that fall in this cluster
+    index = np.where(kmeans_result == kmeans_cluster)
+    # make the plot
+    plt.scatter(X_Scale[index, 0], X_Scale[index, 1])
 plt.show()
