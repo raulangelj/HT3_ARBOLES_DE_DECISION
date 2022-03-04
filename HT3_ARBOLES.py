@@ -50,88 +50,172 @@ train.head()
 
 # ## 2. Haga  un  análisis  exploratorio  extenso  de  los  datos.  Explique  bien  todos  los  hallazgos.  No ponga solo gráficas y código. Debe llegar a conclusiones interesantes para poder predecir.Explique el preprocesamiento que necesitó hacer.
 
+# Se deciden utilizar estas variables debido a que estas son las que nos permiten predecir el comportamiento de este mercad o en un futoro. Con estas variables podemos ver si tiene alguna importanacia en el precio la cantidad del espacio, cantidad de cuartos/baños e incluso el año en el que se termina vendiendo la casa
+
 
 # %% [markdown]
 # - SalePrice - **CUANTITATIVO CONTINUO** debido a que el precio puede tener centavos; the property's sale price in dollars. This is the target variable that you're trying to predict.
-# - MSSubClass: The building class
-# MSZoning: The general zoning classification
-# LotFrontage: Linear feet of street connected to property
-# LotArea: Lot size in square feet
-# Street: Type of road access
-# Alley: Type of alley access
-# LotShape: General shape of property
-# LandContour: Flatness of the property
-# Utilities: Type of utilities available
-# LotConfig: Lot configuration
-# LandSlope: Slope of property
-# Neighborhood: Physical locations within Ames city limits
-# Condition1: Proximity to main road or railroad
-# Condition2: Proximity to main road or railroad (if a second is present)
-# BldgType: Type of dwelling
-# HouseStyle: Style of dwelling
-# OverallQual: Overall material and finish quality
-# OverallCond: Overall condition rating
-# YearBuilt: Original construction date
-# YearRemodAdd: Remodel date
-# RoofStyle: Type of roof
-# RoofMatl: Roof material
-# Exterior1st: Exterior covering on house
-# Exterior2nd: Exterior covering on house (if more than one material)
-# MasVnrType: Masonry veneer type
-# MasVnrArea: Masonry veneer area in square feet
-# ExterQual: Exterior material quality
-# ExterCond: Present condition of the material on the exterior
-# Foundation: Type of foundation
-# BsmtQual: Height of the basement
-# BsmtCond: General condition of the basement
-# BsmtExposure: Walkout or garden level basement walls
-# BsmtFinType1: Quality of basement finished area
-# BsmtFinSF1: Type 1 finished square feet
-# BsmtFinType2: Quality of second finished area (if present)
-# BsmtFinSF2: Type 2 finished square feet
-# BsmtUnfSF: Unfinished square feet of basement area
-# TotalBsmtSF: Total square feet of basement area
-# Heating: Type of heating
-# HeatingQC: Heating quality and condition
-# CentralAir: Central air conditioning
-# Electrical: Electrical system
-# 1stFlrSF: First Floor square feet
-# 2ndFlrSF: Second floor square feet
-# LowQualFinSF: Low quality finished square feet (all floors)
-# GrLivArea: Above grade (ground) living area square feet
-# BsmtFullBath: Basement full bathrooms
-# BsmtHalfBath: Basement half bathrooms
-# FullBath: Full bathrooms above grade
-# HalfBath: Half baths above grade
-# Bedroom: Number of bedrooms above basement level
-# Kitchen: Number of kitchens
-# KitchenQual: Kitchen quality
-# TotRmsAbvGrd: Total rooms above grade (does not include bathrooms)
-# Functional: Home functionality rating
-# Fireplaces: Number of fireplaces
-# FireplaceQu: Fireplace quality
-# GarageType: Garage location
-# GarageYrBlt: Year garage was built
-# GarageFinish: Interior finish of the garage
-# GarageCars: Size of garage in car capacity
-# GarageArea: Size of garage in square feet
-# GarageQual: Garage quality
-# GarageCond: Garage condition
-# PavedDrive: Paved driveway
-# WoodDeckSF: Wood deck area in square feet
-# OpenPorchSF: Open porch area in square feet
-# EnclosedPorch: Enclosed porch area in square feet
-# 3SsnPorch: Three season porch area in square feet
-# ScreenPorch: Screen porch area in square feet
-# PoolArea: Pool area in square feet
-# PoolQC: Pool quality
-# Fence: Fence quality
-# MiscFeature: Miscellaneous feature not covered in other categories
-# MiscVal: $Value of miscellaneous feature
-# MoSold: Month Sold
-# YrSold: Year Sold
-# SaleType: Type of sale
-# SaleCondition: Condition of sale
+# - LotArea: **CUANTITATIVO CONTINUO** Lot size in square feet
+# - OverallCond: **CUANTITATIVO DISCRETO** Overall condition rating
+# - YearBuilt: **CUANTITATIVO DISCRETO** Original construction date
+# - MasVnrArea: **CUANTITATIVO CONTINUO** Masonry veneer area in square feet
+# - TotalBsmtSF: **CUANTITATIVO CONTINUO** Total square feet of basement area
+# - 1stFlrSF: **CUANTITATIVO CONTINUO** First Floor square feet
+# - 2ndFlrSF: **CUANTITATIVO CONTINUO** Second floor square feet
+# - GrLivArea: **CUANTITATIVO CONTINUO** Above grade (ground) living area square feet
+# - TotRmsAbvGrd: **CUANTITATIVO DISCRETO** Total rooms above grade (does not include bathrooms)
+# - GarageCars: **CUANTITATIVO DISCRETO** Size of garage in car capacity
+# - WoodDeckSF: **CUANTITATIVO CONTINUO** Wood deck area in square feet
+# - OpenPorchSF: **CUANTITATIVO CONTINUO** Open porch area in square feet
+# - EnclosedPorch: **CUANTITATIVO CONTINUO** Enclosed porch area in square feet
+# - PoolArea: **CUANTITATIVO CONTINUO** Pool area in square feet
+# - Neighborhood: **CUALITATIVO NOMINAL** Physical locations within Ames city limits
 
 # %%
-usefullAttr = []
+usefullAttr = ['SalePrice', 'LotArea', 'OverallCond', 'YearBuilt', 'MasVnrArea', 'TotalBsmtSF', '1stFlrSF',
+               '2ndFlrSF', 'GrLivArea', 'TotRmsAbvGrd', 'GarageCars', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch', 'PoolArea', 'Neighborhood']
+
+
+# %%
+data = train[usefullAttr]
+data.head()
+
+# %% [markdown]
+# ### GRAFICAS DE VARIABLES
+
+# %%
+
+
+def get_histogram_qq(variable):
+    plt.hist(x=data[variable] .dropna(), color='#F2AB6D', rwidth=1)
+    plt.title(f'Histograma de la variable{variable}')
+    plt.xlabel(variable)
+    plt.ylabel('frencuencias')
+    plt.rcParams['figure.figsize'] = (30, 30)
+    plt.show()
+
+    distribucion_generada = data[variable].dropna()
+    # Represento el Q-Q plot
+    qqplot(distribucion_generada, line='s')
+    plt.show()
+
+# %% [markdown]
+# #### SalePricee
+# Se puede determinar que la variable SalePrice no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+
+# %%
+get_histogram_qq('SalePrice')
+
+# %% [markdown]
+# #### LotArea
+# Se puede determinar que la variable LotArea no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('LotArea')
+
+# %% [markdown]
+# #### OverallCond
+# Se puede determinar que la variable OverallCond no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('OverallCond')
+
+# %% [markdown]
+# #### YearBuilt
+# Se puede determinar que la variable YearBuilt no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('YearBuilt')
+
+# %% [markdown]
+# #### MasVnrArea
+# Se puede determinar que la variable MasVnrArea no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('MasVnrArea')
+
+# %% [markdown]
+# #### TotalBsmtSF
+# Se puede determinar que la variable TotalBsmtSF no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('TotalBsmtSF')
+
+# %% [markdown]
+# #### 1stFlrSF
+# Se puede determinar que la variable 1stFlrSF no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('1stFlrSF')
+
+# %% [markdown]
+# #### 2ndFlrSF
+# Se puede determinar que la variable 2ndFlrSF no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('2ndFlrSF')
+
+# %% [markdown]
+# #### GrLivArea
+# Se puede determinar que la variable GrLivArea no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('GrLivArea')
+
+# %% [markdown]
+# #### TotRmsAbvGrd
+# Se puede determinar que la variable TotRmsAbvGrd no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('TotRmsAbvGrd')
+
+# %% [markdown]
+# #### GarageCars
+# Se puede determinar que la variable GarageCars no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('GarageCars')
+
+# %% [markdown]
+# #### WoodDeckSF
+# Se puede determinar que la variable WoodDeckSF no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('WoodDeckSF')
+
+# %% [markdown]
+# #### OpenPorchSF
+# Se puede determinar que la variable OpenPorchSF no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('OpenPorchSF')
+
+# %% [markdown]
+# #### EnclosedPorch
+# Se puede determinar que la variable EnclosedPorch no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('EnclosedPorch')
+
+# %% [markdown]
+# #### PoolArea
+# Se puede determinar que la variable PoolArea no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+get_histogram_qq('PoolArea')
+
+# %% [markdown]
+# #### Neighborhood
+# Se puede determinar que la variable Neighborhood no sigue una disctribucion normal debido a que el histograma no sigue una forma de campana y el diagrama QQ nos muestra que los datos son muy distintos.
+
+# %%
+eje_x = np.array(pd.value_counts(data['Neighborhood']).keys())
+eje_y = pd.value_counts(data['Neighborhood'])
+
+plt.bar(eje_x, eje_y)
+plt.rcParams['figure.figsize'] = (10, 10)
+plt.ylabel('Frecuencia de la variable Neighborhood')
+plt.xlabel('Años')
+plt.title('Grafico de barras para la variable Neighborhood')
+plt.show()
