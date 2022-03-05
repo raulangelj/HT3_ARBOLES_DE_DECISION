@@ -300,6 +300,10 @@ data['cluster'] = kmeans.labels_
 print(data[data['cluster'] == 0].describe().transpose())
 print(data[data['cluster'] == 1].describe().transpose())
 
+# %% [markdown]
+# ## 4. Dependiendo del análisis exploratorio elaborado cree una variable respuesta que le permita clasificar  las  casas  en  Económicas,  Intermedias  o  Caras.  Los  límites  de  estas  clases  deben tener un fundamento en la distribución de los datos de precios, y estar bien explicados.
+
+# Se crea la variable de 'Clasificacion' en la cual se clasifica como Economica, Intermedia o Cara. Acorda al precio. Para obtener el rango se resta la diff de los minimos y maximos de los precios y se divide entre tres para poder observar las clasificaciones de las casas. Al final tambien se muestran la cantidad de casa por cada clasificacion.
 # %%
 # Clasificacion de casas en: Economias, Intermedias o Caras.
 data.fillna(0)
