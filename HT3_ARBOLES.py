@@ -272,6 +272,18 @@ plt.title("Gráfico de Codo")
 plt.show()
 
 # %%
+kmeans = cluster.KMeans(n_clusters=7)
+kmeans.fit(X_Scale)
+kmeans_result = kmeans.predict(X_Scale)
+kmeans_clusters = np.unique(kmeans_result)
+for kmeans_cluster in kmeans_clusters:
+    # get data points that fall in this cluster
+    index = np.where(kmeans_result == kmeans_cluster)
+    # make the plot
+    plt.scatter(X_Scale[index, 0], X_Scale[index, 1])
+plt.show()
+
+# %%
 kmeans = cluster.KMeans(n_clusters=2)
 kmeans.fit(X_Scale)
 kmeans_result = kmeans.predict(X_Scale)
@@ -284,13 +296,26 @@ for kmeans_cluster in kmeans_clusters:
 plt.show()
 
 # %%
-kmeans = cluster.KMeans(n_clusters=7)
-kmeans.fit(X_Scale)
-kmeans_result = kmeans.predict(X_Scale)
-kmeans_clusters = np.unique(kmeans_result)
-for kmeans_cluster in kmeans_clusters:
-    # get data points that fall in this cluster
-    index = np.where(kmeans_result == kmeans_cluster)
-    # make the plot
-    plt.scatter(X_Scale[index, 0], X_Scale[index, 1])
-plt.show()
+data['cluster'] = kmeans.labels_
+print(data[data['cluster'] == 0].describe().transpose())
+print(data[data['cluster'] == 1].describe().transpose())
+
+# %%
+# Clasificacion de casas en: Economias, Intermedias o Caras.
+data.fillna(0)
+minPrice = data['SalePrice'].min()
+maxPrice = data['SalePrice'].max()
+divicion = (maxPrice - minPrice) / 3
+data['Clasificacion'] = data['LotArea']
+
+data['Clasificacion'][data['SalePrice'] < minPrice + divicion] = 'Economia'
+data['Clasificacion'][data['SalePrice'] >= minPrice + divicion] = 'Intermedia'
+data['Clasificacion'][data['SalePrice'] >= minPrice + divicion * 2] = 'Caras'
+# %% [markdown]
+# #### Contamos la cantidad de casas por clasificacion
+
+# %%
+# Obtener cuantos datos hay por cada clasificacion
+print(data['Clasificacion'].value_counts())
+
+# %%
