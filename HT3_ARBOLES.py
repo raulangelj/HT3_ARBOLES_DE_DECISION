@@ -8,31 +8,36 @@
 # Oscar Saravia 19322
 
 # %%
-from re import U
+# from re import U
 from statsmodels.graphics.gofplots import qqplot
 import numpy as np
 import pandas as pd
-import pandasql as ps
+# import pandasql as ps
 import matplotlib.pyplot as plt
-import scipy.stats as stats
+# import scipy.stats as stats
 import statsmodels.stats.diagnostic as diag
-import statsmodels.api as sm
-import seaborn as sns
-import random
+# import statsmodels.api as sm
+# import seaborn as sns
+# import random
 import sklearn.cluster as cluster
-import sklearn.metrics as metrics
+# import sklearn.metrics as metrics
 import sklearn.preprocessing
-import scipy.cluster.hierarchy as sch
+# import scipy.cluster.hierarchy as sch
 import pyclustertend
-import sklearn.mixture as mixture
-from sklearn import datasets
-from sklearn.cluster import DBSCAN
-from numpy import unique
-from numpy import where
-from matplotlib import pyplot
-from sklearn.datasets import make_classification
-from sklearn.cluster import Birch
-from sklearn.mixture import GaussianMixture
+from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import metrics
+# import sklearn.mixture as mixture
+# from sklearn import datasets
+# from sklearn.cluster import DBSCAN
+# from numpy import unique
+# from numpy import where
+# from matplotlib import pyplot
+# from sklearn.datasets import make_classification
+# from sklearn.cluster import Birch
+# from sklearn.mixture import GaussianMixture
+
+from sklearn.model_selection import train_test_split
 
 # %matplotlib inline
 from mpl_toolkits.mplot3d import Axes3D
@@ -322,4 +327,35 @@ data['Clasificacion'][data['SalePrice'] >= minPrice + divicion * 2] = 'Caras'
 # Obtener cuantos datos hay por cada clasificacion
 print(data['Clasificacion'].value_counts())
 
+# %% [markdown]
+# ## 5. Divida el set de datos preprocesados en dos conjuntos: Entrenamiento y prueba. Describa el criterio que usó para crear los conjuntos: número de filas de cada uno, estratificado o no, balanceado o no, etc. Si le proveen un conjunto de datos de prueba y tiene suficientes datos, tómelo como de validación, pero haga sus propios conjuntos de prueba.
+
+# %% [markdown]
+# # Estableciendo los conjuntos de Entrenamiento y Prueba
+
 # %%
+y = data['Clasificacion']
+X = data.drop(['Clasificacion'], axis=1)
+
+# %%
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, train_size=0.7)
+y_train
+
+# %% [markdown]
+# 70% de entrenamiento y 30% prueba
+
+# %%
+arbol = DecisionTreeClassifier(max_depth=4, random_state=42)
+arbol = arbol.fit(X_train, y_train)
+
+# %%
+tree.plot_tree(arbol, feature_names=data.columns,
+               class_names=['0', '1', '2'], filled=True)
+# %%
+y_pred = arbol.predict(X_test)
+print(y_pred)
+print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+print("Precision:", metrics.precision_score(
+    y_test, y_pred, average='weighted'))
+print("Recall: ", metrics.recall_score(y_test, y_pred, average='weighted'))
