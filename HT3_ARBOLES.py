@@ -330,6 +330,8 @@ print(data['Clasificacion'].value_counts())
 # %% [markdown]
 # ## 5. Divida el set de datos preprocesados en dos conjuntos: Entrenamiento y prueba. Describa el criterio que usó para crear los conjuntos: número de filas de cada uno, estratificado o no, balanceado o no, etc. Si le proveen un conjunto de datos de prueba y tiene suficientes datos, tómelo como de validación, pero haga sus propios conjuntos de prueba.
 
+# Se dividen los en dos grupos, entranamiento con 0.7 y prueba con 0.3. Se utiliza el caso normal debido a que evitamos sobreajuste de nuestros datos. Y va a ser nuestra variable clasificacion, X con los demas datos disponibles sin la clasificacion. Se estratifican los datos debdio a que tenemos 3 tipos de clasiicacion Economia, Intermedia y Cara.
+
 # %% [markdown]
 # # Estableciendo los conjuntos de Entrenamiento y Prueba
 
