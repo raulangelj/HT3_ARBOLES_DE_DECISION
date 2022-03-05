@@ -349,6 +349,9 @@ y_train
 arbol = DecisionTreeClassifier(max_depth=4, random_state=42)
 arbol = arbol.fit(X_train, y_train)
 
+# %% [markdown]
+# ## 6. Elabore  el  árbol  de  clasificación  utilizando  el  conjunto  de  entrenamiento  y  la  variable respuesta que creó en el punto 4.  Explique los resultados a los que llega. Muestre el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
+
 # %%
 tree.plot_tree(arbol, feature_names=data.columns,
                class_names=['0', '1', '2'], filled=True)
