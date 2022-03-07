@@ -25,7 +25,7 @@ import sklearn.preprocessing
 # import scipy.cluster.hierarchy as sch
 import pyclustertend
 from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn import metrics
 # import sklearn.mixture as mixture
 # from sklearn import datasets
@@ -364,3 +364,19 @@ print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
 print("Precision:", metrics.precision_score(
     y_test, y_pred, average='weighted'))
 print("Recall: ", metrics.recall_score(y_test, y_pred, average='weighted'))
+
+# %% [markdown]
+# ## 6.Elabore el árbol de regresión para predecir el precio de las viviendas utilizando el conjunto 
+# de entrenamiento.  Explique los resultados a los que llega. Muestre el modelo gráficamente. 
+# El experimento debe ser reproducible por lo que debe fijar que los conjuntos de 
+# entrenamiento y prueba sean los mismos siempre que se ejecute el código.
+print('hehehehheheheh')
+regressionTree = DecisionTreeRegressor(max_depth=4, random_state=42) 
+regressionTree = arbol.fit(X_train, y_train) 
+tree.plot_tree(regressionTree,feature_names=data.columns,
+               class_names=['0','1','2'],filled=True )
+
+y_pred = regressionTree.predict(X_test)
+print ("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
