@@ -289,7 +289,7 @@ for kmeans_cluster in kmeans_clusters:
 plt.show()
 
 # %%
-kmeans = cluster.KMeans(n_clusters=2)
+kmeans = cluster.KMeans(n_clusters=3)
 kmeans.fit(X_Scale)
 kmeans_result = kmeans.predict(X_Scale)
 kmeans_clusters = np.unique(kmeans_result)
@@ -314,12 +314,12 @@ print(data[data['cluster'] == 1].describe().transpose())
 data.fillna(0)
 minPrice = data['SalePrice'].min()
 maxPrice = data['SalePrice'].max()
-divicion = (maxPrice - minPrice) / 3
+division = (maxPrice - minPrice) / 3
 data['Clasificacion'] = data['LotArea']
 
-data['Clasificacion'][data['SalePrice'] < minPrice + divicion] = 'Economica'
-data['Clasificacion'][data['SalePrice'] >= minPrice + divicion] = 'Intermedia'
-data['Clasificacion'][data['SalePrice'] >= minPrice + divicion * 2] = 'Caras'
+data['Clasificacion'][data['SalePrice'] < minPrice + division] = 'Economica'
+data['Clasificacion'][data['SalePrice'] >= minPrice + division] = 'Intermedia'
+data['Clasificacion'][data['SalePrice'] >= minPrice + division * 2] = 'Caras'
 # %% [markdown]
 # #### Contamos la cantidad de casas por clasificacion
 
@@ -388,6 +388,7 @@ print("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
 # %%[markdown]
 # ## 9.Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores
 confussion_matrix = metrics.confusion_matrix(y_true=y_test, y_pred=y_pred)
+print(confussion_matrix)
 sns.heatmap(confussion_matrix, annot=True)
         
 # %%[markdown]
