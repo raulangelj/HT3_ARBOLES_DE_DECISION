@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 # import scipy.stats as stats
 import statsmodels.stats.diagnostic as diag
 # import statsmodels.api as sm
-# import seaborn as sns
+import seaborn as sns
 # import random
 import sklearn.cluster as cluster
 # import sklearn.metrics as metrics
@@ -317,7 +317,7 @@ maxPrice = data['SalePrice'].max()
 divicion = (maxPrice - minPrice) / 3
 data['Clasificacion'] = data['LotArea']
 
-data['Clasificacion'][data['SalePrice'] < minPrice + divicion] = 'Economia'
+data['Clasificacion'][data['SalePrice'] < minPrice + divicion] = 'Economica'
 data['Clasificacion'][data['SalePrice'] >= minPrice + divicion] = 'Intermedia'
 data['Clasificacion'][data['SalePrice'] >= minPrice + divicion * 2] = 'Caras'
 # %% [markdown]
@@ -337,7 +337,7 @@ print(data['Clasificacion'].value_counts())
 
 # %%
 y = data['Clasificacion']
-X = data.drop(['Clasificacion'], axis=1)
+X = data.drop(['Clasificacion', 'SalePrice'], axis=1)
 
 # %%
 X_train, X_test, y_train, y_test = train_test_split(
@@ -366,17 +366,32 @@ print("Precision:", metrics.precision_score(
 print("Recall: ", metrics.recall_score(y_test, y_pred, average='weighted'))
 
 # %% [markdown]
-# ## 6.Elabore el árbol de regresión para predecir el precio de las viviendas utilizando el conjunto 
+# ## 7.Elabore el árbol de regresión para predecir el precio de las viviendas utilizando el conjunto 
 # de entrenamiento.  Explique los resultados a los que llega. Muestre el modelo gráficamente. 
 # El experimento debe ser reproducible por lo que debe fijar que los conjuntos de 
 # entrenamiento y prueba sean los mismos siempre que se ejecute el código.
-print('hehehehheheheh')
+plt.rcParams['figure.figsize'] = (160, 90)
 regressionTree = DecisionTreeRegressor(max_depth=4, random_state=42) 
 regressionTree = arbol.fit(X_train, y_train) 
 tree.plot_tree(regressionTree,feature_names=data.columns,
                class_names=['0','1','2'],filled=True )
 
-y_pred = regressionTree.predict(X_test)
-print ("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
-print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+# %%[markdown]
+# ## 8.Utilice  el  modelo  con  el  conjunto  de  prueba  y  determine  la  eficiencia  del  algoritmo  para clasificar y predecir, en dependencia de las características de la variable respuesta. 
+
+y_pred = arbol.predict(X_test)
+print(y_pred)
+print("Exactitud:",metrics.accuracy_score(y_test, y_pred))
+print("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+
+# %%[markdown]
+# ## 9.Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores
+confussion_matrix = metrics.confusion_matrix(y_true=y_test, y_pred=y_pred)
+sns.heatmap(confussion_matrix, annot=True)
+        
+# %%[markdown]
+# ## 10.Analice el desempeño del árbol de regresión.
+tree.plot_tree(regressionTree,feature_names=data.columns,
+               class_names=['0','1','2'],filled=True )
+# %%
