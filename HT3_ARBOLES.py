@@ -242,7 +242,9 @@ X = []
 for column in data.columns:
     try:
         column
-        if column != 'Neighborhood':
+        if column == 'Neighborhood' or column == 'SalePrice':
+            continue
+        else:
             data[column] = (data[column]-data[column].mean()) / \
                 data[column].std()
             X.append(data[column])
@@ -304,6 +306,7 @@ plt.show()
 data['cluster'] = kmeans.labels_
 print(data[data['cluster'] == 0].describe().transpose())
 print(data[data['cluster'] == 1].describe().transpose())
+print(data[data['cluster'] == 2].describe().transpose())
 
 # %% [markdown]
 # ## 4. Dependiendo del análisis exploratorio elaborado cree una variable respuesta que le permita clasificar  las  casas  en  Económicas,  Intermedias  o  Caras.  Los  límites  de  estas  clases  deben tener un fundamento en la distribución de los datos de precios, y estar bien explicados.
@@ -312,14 +315,24 @@ print(data[data['cluster'] == 1].describe().transpose())
 # %%
 # Clasificacion de casas en: Economias, Intermedias o Caras.
 data.fillna(0)
-minPrice = data['SalePrice'].min()
-maxPrice = data['SalePrice'].max()
-division = (maxPrice - minPrice) / 3
+limit1 = data.query('cluster == 0')['SalePrice'].mean()
+# limit2 = data.query('cluster == 1')['SalePrice'].mean() # Con este limit2 me da un acierto de 1.0
+limit2 = data.query('cluster == 2')['SalePrice'].mean()
+# minPrice = data['SalePrice'].min()
+# maxPrice = data['SalePrice'].max()
+# division = (maxPrice - minPrice) / 3
 data['Clasificacion'] = data['LotArea']
 
-data['Clasificacion'][data['SalePrice'] < minPrice + division] = 'Economica'
-data['Clasificacion'][data['SalePrice'] >= minPrice + division] = 'Intermedia'
-data['Clasificacion'][data['SalePrice'] >= minPrice + division * 2] = 'Caras'
+# data['Clasificacion'][data['SalePrice'] < minPrice + division] = 'Economica'
+# data['Clasificacion'][data['SalePrice'] >= minPrice + division] = 'Intermedia'
+# data['Clasificacion'][data['SalePrice'] >= minPrice + division * 2] = 'Caras'
+data.loc[data['SalePrice'] < limit1, 'Clasificacion'] = 'Economica'
+data.loc[(data['SalePrice'] >= limit1) & (
+    data['SalePrice'] < limit2), 'Clasificacion'] = 'Intermedia'
+data.loc[data['SalePrice'] >= limit2, 'Clasificacion'] = 'Caras'
+# data.loc[data['cluster'] == 0, 'Clasificacion'] = 'Economica'
+# data.loc[data['cluster'] == 1, 'Clasificacion'] = 'Intermedia'
+# data.loc[data['cluster'] == 2, 'Clasificacion'] = 'Caras'
 # %% [markdown]
 # #### Contamos la cantidad de casas por clasificacion
 
@@ -366,33 +379,34 @@ print("Precision:", metrics.precision_score(
 print("Recall: ", metrics.recall_score(y_test, y_pred, average='weighted'))
 
 # %% [markdown]
-# ## 7.Elabore el árbol de regresión para predecir el precio de las viviendas utilizando el conjunto 
-# de entrenamiento.  Explique los resultados a los que llega. Muestre el modelo gráficamente. 
-# El experimento debe ser reproducible por lo que debe fijar que los conjuntos de 
+# ## 7.Elabore el árbol de regresión para predecir el precio de las viviendas utilizando el conjunto
+# de entrenamiento.  Explique los resultados a los que llega. Muestre el modelo gráficamente.
+# El experimento debe ser reproducible por lo que debe fijar que los conjuntos de
 # entrenamiento y prueba sean los mismos siempre que se ejecute el código.
 plt.rcParams['figure.figsize'] = (160, 90)
-regressionTree = DecisionTreeRegressor(max_depth=4, random_state=42) 
-regressionTree = arbol.fit(X_train, y_train) 
-tree.plot_tree(regressionTree,feature_names=data.columns,
-               class_names=['0','1','2'],filled=True )
+regressionTree = DecisionTreeRegressor(max_depth=4, random_state=42)
+regressionTree = arbol.fit(X_train, y_train)
+tree.plot_tree(regressionTree, feature_names=data.columns,
+               class_names=['0', '1', '2'], filled=True)
 
 # %%[markdown]
-# ## 8.Utilice  el  modelo  con  el  conjunto  de  prueba  y  determine  la  eficiencia  del  algoritmo  para clasificar y predecir, en dependencia de las características de la variable respuesta. 
+# ## 8.Utilice  el  modelo  con  el  conjunto  de  prueba  y  determine  la  eficiencia  del  algoritmo  para clasificar y predecir, en dependencia de las características de la variable respuesta.
 
 y_pred = arbol.predict(X_test)
 print(y_pred)
-print("Exactitud:",metrics.accuracy_score(y_test, y_pred))
-print("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
-print("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Exactitud:", metrics.accuracy_score(y_test, y_pred))
+print("Precision:", metrics.precision_score(
+    y_test, y_pred, average='weighted'))
+print("Recall: ", metrics.recall_score(y_test, y_pred, average='weighted'))
 
 # %%[markdown]
 # ## 9.Haga un análisis de la eficiencia del algoritmo usando una matriz de confusión para el árbol de clasificación. Tenga en cuenta la efectividad, donde el algoritmo se equivocó más, donde se equivocó menos y la importancia que tienen los errores
 confussion_matrix = metrics.confusion_matrix(y_true=y_test, y_pred=y_pred)
 print(confussion_matrix)
 sns.heatmap(confussion_matrix, annot=True)
-        
+
 # %%[markdown]
 # ## 10.Analice el desempeño del árbol de regresión.
-tree.plot_tree(regressionTree,feature_names=data.columns,
-               class_names=['0','1','2'],filled=True )
+tree.plot_tree(regressionTree, feature_names=data.columns,
+               class_names=['0', '1', '2'], filled=True)
 # %%
