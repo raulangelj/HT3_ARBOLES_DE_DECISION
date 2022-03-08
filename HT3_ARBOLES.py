@@ -236,15 +236,14 @@ plt.show()
 
 # %%
 # NORMALIZAMOS DATOS
-usefullAttr.remove('Neighborhood')
+if 'Neighborhood' in data.columns:
+    usefullAttr.remove('Neighborhood')
 data = train[usefullAttr]
 X = []
 for column in data.columns:
     try:
         column
-        if column == 'Neighborhood' or column == 'SalePrice':
-            continue
-        else:
+        if column != 'Neighborhood' or column != 'SalePrice':
             data[column] = (data[column]-data[column].mean()) / \
                 data[column].std()
             X.append(data[column])
@@ -263,6 +262,9 @@ pyclustertend.hopkins(X_scale, len(X_scale))
 # %%
 # VAT
 pyclustertend.vat(X_Scale)
+
+# devolvemos el SalePrice a su valor original
+data['SalePrice'] = train['SalePrice']
 
 # %%
 numeroClusters = range(1, 11)
@@ -311,13 +313,13 @@ print(data[data['cluster'] == 2].describe().transpose())
 # %% [markdown]
 # ## 4. Dependiendo del análisis exploratorio elaborado cree una variable respuesta que le permita clasificar  las  casas  en  Económicas,  Intermedias  o  Caras.  Los  límites  de  estas  clases  deben tener un fundamento en la distribución de los datos de precios, y estar bien explicados.
 
-# Se crea la variable de 'Clasificacion' en la cual se clasifica como Economica, Intermedia o Cara. Acorda al precio. Para obtener el rango se resta la diff de los minimos y maximos de los precios y se divide entre tres para poder observar las clasificaciones de las casas. Al final tambien se muestran la cantidad de casa por cada clasificacion.
+# Se crea la variable de 'Clasificacion' en la cual se clasifica como Economica, Intermedia o Cara. Acorde al precio. Para obtener el rango se crean dos limites. El limite 1 es la media de nuestro salesprice que tienen cluster 0 y para el limit 2 es la media de los que tienen cluster 1. Se realizo de esta forma debido a que como muchos de los precios tenian maximos y minimos en dos categoris se uso la media para colocar los limites.
+
 # %%
 # Clasificacion de casas en: Economias, Intermedias o Caras.
 data.fillna(0)
 limit1 = data.query('cluster == 0')['SalePrice'].mean()
-# limit2 = data.query('cluster == 1')['SalePrice'].mean() # Con este limit2 me da un acierto de 1.0
-limit2 = data.query('cluster == 2')['SalePrice'].mean()
+limit2 = data.query('cluster == 1')['SalePrice'].mean()
 # minPrice = data['SalePrice'].min()
 # maxPrice = data['SalePrice'].max()
 # division = (maxPrice - minPrice) / 3
@@ -333,6 +335,7 @@ data.loc[data['SalePrice'] >= limit2, 'Clasificacion'] = 'Caras'
 # data.loc[data['cluster'] == 0, 'Clasificacion'] = 'Economica'
 # data.loc[data['cluster'] == 1, 'Clasificacion'] = 'Intermedia'
 # data.loc[data['cluster'] == 2, 'Clasificacion'] = 'Caras'
+
 # %% [markdown]
 # #### Contamos la cantidad de casas por clasificacion
 
@@ -409,4 +412,5 @@ sns.heatmap(confussion_matrix, annot=True)
 # ## 10.Analice el desempeño del árbol de regresión.
 tree.plot_tree(regressionTree, feature_names=data.columns,
                class_names=['0', '1', '2'], filled=True)
+
 # %%
