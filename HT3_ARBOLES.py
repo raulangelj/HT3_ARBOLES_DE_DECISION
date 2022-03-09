@@ -412,5 +412,8 @@ sns.heatmap(confussion_matrix, annot=True)
 # ## 10.Analice el desempeño del árbol de regresión.
 tree.plot_tree(regressionTree, feature_names=data.columns,
                class_names=['0', '1', '2'], filled=True)
+print('En el arbol de regresion elaborado en la pregunta 7, para predecir el precio de las viviendas, podemos observar como se ramifican las diferentes alternativas de precios posibles a partir de las variables seleccionadas. Lo que nos muestra el arbol son las diferentes opciones de precios en el mercado, los cuales se clasifican segun el conjunto de variables, como se menciono anteriormente, tambien podemos observar el indice gini en cada uno de los nodos, el cual mide el grado o la probabilidad de que una variable en particular se clasifique incorrectamente cuando se elige al azar y podemos observar que se mantiene en valores bajos')
 
-# %%
+
+# %%[markdown]
+# ## 11.Repita  los  análisis  usando  random  forest  como  algoritmo  de  predicción,  explique  sus resultados comparando ambos algoritmos.
