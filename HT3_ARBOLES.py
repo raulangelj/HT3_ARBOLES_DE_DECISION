@@ -26,6 +26,7 @@ import sklearn.preprocessing
 import pyclustertend
 from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 # import sklearn.mixture as mixture
 # from sklearn import datasets
@@ -417,3 +418,13 @@ print('En el arbol de regresion elaborado en la pregunta 7, para predecir el pre
 
 # %%[markdown]
 # ## 11.Repita  los  análisis  usando  random  forest  como  algoritmo  de  predicción,  explique  sus resultados comparando ambos algoritmos.
+randomForest = RandomForestClassifier(max_depth=4, random_state=42) 
+randomForest = arbol.fit(X_train, y_train) 
+
+tree.plot_tree(randomForest,feature_names=data.columns,
+               class_names=['0','1','2'],filled=True )
+               
+y_pred = randomForest.predict(X_test)
+print ("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
