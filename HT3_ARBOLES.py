@@ -425,6 +425,7 @@ tree.plot_tree(randomForest,feature_names=data.columns,
                class_names=['0','1','2'],filled=True )
                
 y_pred = randomForest.predict(X_test)
-print ("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
-print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Exactitud:",metrics.accuracy_score(y_test, y_pred))
+print("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Comparación: Se puede observar que el de random forest nos da un análisis más extenso y exacto, pues crea una serie de árboles para analizar un conjunto de datos de entrenamiento. los resultados obtenidos se combinan a fin de obtener un modelo único más robusto en comparación con los resultados de cada árbol por separado obtenniendo mejores resultados.")
