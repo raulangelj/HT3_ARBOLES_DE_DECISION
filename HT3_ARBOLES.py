@@ -7,6 +7,8 @@
 
 # Oscar Saravia 19322
 
+# link al repo: https://github.com/raulangelj/HT3_ARBOLES_DE_DECISION
+
 # %%
 # from re import U
 from statsmodels.graphics.gofplots import qqplot
@@ -418,14 +420,15 @@ print('En el arbol de regresion elaborado en la pregunta 7, para predecir el pre
 
 # %%[markdown]
 # ## 11.Repita  los  análisis  usando  random  forest  como  algoritmo  de  predicción,  explique  sus resultados comparando ambos algoritmos.
-randomForest = RandomForestClassifier(max_depth=4, random_state=42) 
-randomForest = arbol.fit(X_train, y_train) 
+randomForest = RandomForestClassifier(max_depth=4, random_state=42)
+randomForest = arbol.fit(X_train, y_train)
 
-tree.plot_tree(randomForest,feature_names=data.columns,
-               class_names=['0','1','2'],filled=True )
-               
+tree.plot_tree(randomForest, feature_names=data.columns,
+               class_names=['0', '1', '2'], filled=True)
+
 y_pred = randomForest.predict(X_test)
-print("Exactitud:",metrics.accuracy_score(y_test, y_pred))
-print("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
-print("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Exactitud:", metrics.accuracy_score(y_test, y_pred))
+print("Precision:", metrics.precision_score(
+    y_test, y_pred, average='weighted'))
+print("Recall: ", metrics.recall_score(y_test, y_pred, average='weighted'))
 print("Comparación: Se puede observar que el de random forest nos da un análisis más extenso y exacto, pues crea una serie de árboles para analizar un conjunto de datos de entrenamiento. los resultados obtenidos se combinan a fin de obtener un modelo único más robusto en comparación con los resultados de cada árbol por separado obtenniendo mejores resultados.")
